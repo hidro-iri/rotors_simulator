@@ -26,8 +26,7 @@
 
 namespace gazebo {
 
-GazeboMotorModel::~GazeboMotorModel() {
-}
+GazeboMotorModel::~GazeboMotorModel() {}
 
 void GazeboMotorModel::InitializeParams() {}
 
@@ -73,20 +72,14 @@ void GazeboMotorModel::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf) {
 
   // Get the pointer to the joint.
   joint_ = model_->GetJoint(joint_name_);
-  if (joint_ == NULL)
-    gzthrow(
-        "[gazebo_motor_model] Couldn't find specified joint \"" << joint_name_
-                                                                << "\".");
+  if (joint_ == NULL) gzthrow("[gazebo_motor_model] Couldn't find specified joint \"" << joint_name_ << "\".");
 
   if (_sdf->HasElement("linkName"))
     link_name_ = _sdf->GetElement("linkName")->Get<std::string>();
   else
     gzerr << "[gazebo_motor_model] Please specify a linkName of the rotor.\n";
   link_ = model_->GetLink(link_name_);
-  if (link_ == NULL)
-    gzthrow(
-        "[gazebo_motor_model] Couldn't find specified link \"" << link_name_
-                                                               << "\".");
+  if (link_ == NULL) gzthrow("[gazebo_motor_model] Couldn't find specified link \"" << link_name_ << "\".");
 
   if (_sdf->HasElement("motorNumber"))
     motor_number_ = _sdf->GetElement("motorNumber")->Get<int>();
@@ -94,8 +87,7 @@ void GazeboMotorModel::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf) {
     gzerr << "[gazebo_motor_model] Please specify a motorNumber.\n";
 
   if (_sdf->HasElement("turningDirection")) {
-    std::string turning_direction =
-        _sdf->GetElement("turningDirection")->Get<std::string>();
+    std::string turning_direction = _sdf->GetElement("turningDirection")->Get<std::string>();
     if (turning_direction == "cw")
       turning_direction_ = turning_direction::CW;
     else if (turning_direction == "ccw")
@@ -128,26 +120,19 @@ void GazeboMotorModel::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf) {
     if (_sdf->HasElement("joint_control_pid")) {
       sdf::ElementPtr pid = _sdf->GetElement("joint_control_pid");
       double p = 0;
-      if (pid->HasElement("p"))
-        p = pid->Get<double>("p");
+      if (pid->HasElement("p")) p = pid->Get<double>("p");
       double i = 0;
-      if (pid->HasElement("i"))
-        i = pid->Get<double>("i");
+      if (pid->HasElement("i")) i = pid->Get<double>("i");
       double d = 0;
-      if (pid->HasElement("d"))
-        d = pid->Get<double>("d");
+      if (pid->HasElement("d")) d = pid->Get<double>("d");
       double iMax = 0;
-      if (pid->HasElement("iMax"))
-        iMax = pid->Get<double>("iMax");
+      if (pid->HasElement("iMax")) iMax = pid->Get<double>("iMax");
       double iMin = 0;
-      if (pid->HasElement("iMin"))
-        iMin = pid->Get<double>("iMin");
+      if (pid->HasElement("iMin")) iMin = pid->Get<double>("iMin");
       double cmdMax = 0;
-      if (pid->HasElement("cmdMax"))
-        cmdMax = pid->Get<double>("cmdMax");
+      if (pid->HasElement("cmdMax")) cmdMax = pid->Get<double>("cmdMax");
       double cmdMin = 0;
-      if (pid->HasElement("cmdMin"))
-        cmdMin = pid->Get<double>("cmdMin");
+      if (pid->HasElement("cmdMin")) cmdMin = pid->Get<double>("cmdMin");
       pids_.Init(p, i, d, iMax, iMin, cmdMax, cmdMin);
     } else {
       pids_.Init(0, 0, 0, 0, 0, 0, 0);
@@ -158,54 +143,36 @@ void GazeboMotorModel::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf) {
     pids_.Init(0, 0, 0, 0, 0, 0, 0);
   }
 
-  getSdfParam<std::string>(
-      _sdf, "commandSubTopic", command_sub_topic_, command_sub_topic_);
-  getSdfParam<std::string>(
-      _sdf, "windSpeedSubTopic", wind_speed_sub_topic_, wind_speed_sub_topic_);
-  getSdfParam<std::string>(
-      _sdf, "motorSpeedPubTopic", motor_speed_pub_topic_,
-      motor_speed_pub_topic_);
+  getSdfParam<std::string>(_sdf, "commandSubTopic", command_sub_topic_, command_sub_topic_);
+  getSdfParam<std::string>(_sdf, "windSpeedSubTopic", wind_speed_sub_topic_, wind_speed_sub_topic_);
+  getSdfParam<std::string>(_sdf, "motorSpeedPubTopic", motor_speed_pub_topic_, motor_speed_pub_topic_);
 
   // Only publish position and force messages if a topic is specified in sdf.
   if (_sdf->HasElement("motorPositionPubTopic")) {
     publish_position_ = true;
-    motor_position_pub_topic_ =
-        _sdf->GetElement("motorPositionPubTopic")->Get<std::string>();
+    motor_position_pub_topic_ = _sdf->GetElement("motorPositionPubTopic")->Get<std::string>();
   }
   if (_sdf->HasElement("motorForcePubTopic")) {
     publish_force_ = true;
-    motor_force_pub_topic_ =
-        _sdf->GetElement("motorForcePubTopic")->Get<std::string>();
+    motor_force_pub_topic_ = _sdf->GetElement("motorForcePubTopic")->Get<std::string>();
   }
 
-  getSdfParam<double>(
-      _sdf, "rotorDragCoefficient", rotor_drag_coefficient_,
-      rotor_drag_coefficient_);
-  getSdfParam<double>(
-      _sdf, "rollingMomentCoefficient", rolling_moment_coefficient_,
-      rolling_moment_coefficient_);
-  getSdfParam<double>(
-      _sdf, "maxRotVelocity", max_rot_velocity_, max_rot_velocity_);
+  getSdfParam<double>(_sdf, "rotorDragCoefficient", rotor_drag_coefficient_, rotor_drag_coefficient_);
+  getSdfParam<double>(_sdf, "rollingMomentCoefficient", rolling_moment_coefficient_, rolling_moment_coefficient_);
+  getSdfParam<double>(_sdf, "maxRotVelocity", max_rot_velocity_, max_rot_velocity_);
   getSdfParam<double>(_sdf, "motorConstant", motor_constant_, motor_constant_);
-  getSdfParam<double>(
-      _sdf, "momentConstant", moment_constant_, moment_constant_);
+  getSdfParam<double>(_sdf, "momentConstant", moment_constant_, moment_constant_);
 
-  getSdfParam<double>(
-      _sdf, "timeConstantUp", time_constant_up_, time_constant_up_);
-  getSdfParam<double>(
-      _sdf, "timeConstantDown", time_constant_down_, time_constant_down_);
-  getSdfParam<double>(
-      _sdf, "rotorVelocitySlowdownSim", rotor_velocity_slowdown_sim_, 10);
+  getSdfParam<double>(_sdf, "timeConstantUp", time_constant_up_, time_constant_up_);
+  getSdfParam<double>(_sdf, "timeConstantDown", time_constant_down_, time_constant_down_);
+  getSdfParam<double>(_sdf, "rotorVelocitySlowdownSim", rotor_velocity_slowdown_sim_, 10);
 
   // Listen to the update event. This event is broadcast every
   // simulation iteration.
-  updateConnection_ = event::Events::ConnectWorldUpdateBegin(
-      boost::bind(&GazeboMotorModel::OnUpdate, this, _1));
+  updateConnection_ = event::Events::ConnectWorldUpdateBegin(boost::bind(&GazeboMotorModel::OnUpdate, this, _1));
 
   // Create the first order filter.
-  rotor_velocity_filter_.reset(
-      new FirstOrderFilter<double>(
-          time_constant_up_, time_constant_down_, ref_motor_input_));
+  rotor_velocity_filter_.reset(new FirstOrderFilter<double>(time_constant_up_, time_constant_down_, ref_motor_input_));
 }
 
 // This gets called by the world update start event.
@@ -230,31 +197,25 @@ void GazeboMotorModel::CreatePubsAndSubs() {
 
   // Create temporary "ConnectGazeboToRosTopic" publisher and message
   gazebo::transport::PublisherPtr gz_connect_gazebo_to_ros_topic_pub =
-      node_handle_->Advertise<gz_std_msgs::ConnectGazeboToRosTopic>(
-          "~/" + kConnectGazeboToRosSubtopic, 1);
+      node_handle_->Advertise<gz_std_msgs::ConnectGazeboToRosTopic>("~/" + kConnectGazeboToRosSubtopic, 1);
   gz_std_msgs::ConnectGazeboToRosTopic connect_gazebo_to_ros_topic_msg;
 
   // Create temporary "ConnectRosToGazeboTopic" publisher and message
   gazebo::transport::PublisherPtr gz_connect_ros_to_gazebo_topic_pub =
-      node_handle_->Advertise<gz_std_msgs::ConnectRosToGazeboTopic>(
-          "~/" + kConnectRosToGazeboSubtopic, 1);
+      node_handle_->Advertise<gz_std_msgs::ConnectRosToGazeboTopic>("~/" + kConnectRosToGazeboSubtopic, 1);
   gz_std_msgs::ConnectRosToGazeboTopic connect_ros_to_gazebo_topic_msg;
 
   // ============================================ //
   //  ACTUAL MOTOR SPEED MSG SETUP (GAZEBO->ROS)  //
   // ============================================ //
   if (publish_speed_) {
-    motor_velocity_pub_ = node_handle_->Advertise<gz_std_msgs::Float32>(
-        "~/" + namespace_ + "/" + motor_speed_pub_topic_, 1);
+    motor_velocity_pub_ =
+        node_handle_->Advertise<gz_std_msgs::Float32>("~/" + namespace_ + "/" + motor_speed_pub_topic_, 1);
 
-    connect_gazebo_to_ros_topic_msg.set_gazebo_topic(
-        "~/" + namespace_ + "/" + motor_speed_pub_topic_);
-    connect_gazebo_to_ros_topic_msg.set_ros_topic(
-        namespace_ + "/" + motor_speed_pub_topic_);
-    connect_gazebo_to_ros_topic_msg.set_msgtype(
-        gz_std_msgs::ConnectGazeboToRosTopic::FLOAT_32);
-    gz_connect_gazebo_to_ros_topic_pub->Publish(
-        connect_gazebo_to_ros_topic_msg, true);
+    connect_gazebo_to_ros_topic_msg.set_gazebo_topic("~/" + namespace_ + "/" + motor_speed_pub_topic_);
+    connect_gazebo_to_ros_topic_msg.set_ros_topic(namespace_ + "/" + motor_speed_pub_topic_);
+    connect_gazebo_to_ros_topic_msg.set_msgtype(gz_std_msgs::ConnectGazeboToRosTopic::FLOAT_32);
+    gz_connect_gazebo_to_ros_topic_pub->Publish(connect_gazebo_to_ros_topic_msg, true);
   }
 
   // =============================================== //
@@ -262,17 +223,13 @@ void GazeboMotorModel::CreatePubsAndSubs() {
   // =============================================== //
 
   if (publish_position_) {
-    motor_position_pub_ = node_handle_->Advertise<gz_std_msgs::Float32>(
-        "~/" + namespace_ + "/" + motor_position_pub_topic_, 1);
+    motor_position_pub_ =
+        node_handle_->Advertise<gz_std_msgs::Float32>("~/" + namespace_ + "/" + motor_position_pub_topic_, 1);
 
-    connect_gazebo_to_ros_topic_msg.set_gazebo_topic(
-        "~/" + namespace_ + "/" + motor_position_pub_topic_);
-    connect_gazebo_to_ros_topic_msg.set_ros_topic(
-        namespace_ + "/" + motor_position_pub_topic_);
-    connect_gazebo_to_ros_topic_msg.set_msgtype(
-        gz_std_msgs::ConnectGazeboToRosTopic::FLOAT_32);
-    gz_connect_gazebo_to_ros_topic_pub->Publish(
-        connect_gazebo_to_ros_topic_msg, true);
+    connect_gazebo_to_ros_topic_msg.set_gazebo_topic("~/" + namespace_ + "/" + motor_position_pub_topic_);
+    connect_gazebo_to_ros_topic_msg.set_ros_topic(namespace_ + "/" + motor_position_pub_topic_);
+    connect_gazebo_to_ros_topic_msg.set_msgtype(gz_std_msgs::ConnectGazeboToRosTopic::FLOAT_32);
+    gz_connect_gazebo_to_ros_topic_pub->Publish(connect_gazebo_to_ros_topic_msg, true);
   }
 
   // ============================================ //
@@ -280,79 +237,59 @@ void GazeboMotorModel::CreatePubsAndSubs() {
   // ============================================ //
 
   if (publish_force_) {
-    motor_force_pub_ = node_handle_->Advertise<gz_std_msgs::Float32>(
-        "~/" + namespace_ + "/" + motor_force_pub_topic_, 1);
+    motor_force_pub_ =
+        node_handle_->Advertise<gz_std_msgs::Float32>("~/" + namespace_ + "/" + motor_force_pub_topic_, 1);
 
-    connect_gazebo_to_ros_topic_msg.set_gazebo_topic(
-        "~/" + namespace_ + "/" + motor_force_pub_topic_);
-    connect_gazebo_to_ros_topic_msg.set_ros_topic(
-        namespace_ + "/" + motor_force_pub_topic_);
-    connect_gazebo_to_ros_topic_msg.set_msgtype(
-        gz_std_msgs::ConnectGazeboToRosTopic::FLOAT_32);
-    gz_connect_gazebo_to_ros_topic_pub->Publish(
-        connect_gazebo_to_ros_topic_msg, true);
+    connect_gazebo_to_ros_topic_msg.set_gazebo_topic("~/" + namespace_ + "/" + motor_force_pub_topic_);
+    connect_gazebo_to_ros_topic_msg.set_ros_topic(namespace_ + "/" + motor_force_pub_topic_);
+    connect_gazebo_to_ros_topic_msg.set_msgtype(gz_std_msgs::ConnectGazeboToRosTopic::FLOAT_32);
+    gz_connect_gazebo_to_ros_topic_pub->Publish(connect_gazebo_to_ros_topic_msg, true);
   }
 
   // ============================================ //
   // = CONTROL COMMAND MSG SETUP (ROS->GAZEBO) = //
   // ============================================ //
 
-  command_sub_ = node_handle_->Subscribe(
-      "~/" + namespace_ + "/" + command_sub_topic_,
-      &GazeboMotorModel::ControlCommandCallback, this);
+  command_sub_ = node_handle_->Subscribe("~/" + namespace_ + "/" + command_sub_topic_,
+                                         &GazeboMotorModel::ControlCommandCallback, this);
 
-  connect_ros_to_gazebo_topic_msg.set_ros_topic(
-      namespace_ + "/" + command_sub_topic_);
-  connect_ros_to_gazebo_topic_msg.set_gazebo_topic(
-      "~/" + namespace_ + "/" + command_sub_topic_);
-  connect_ros_to_gazebo_topic_msg.set_msgtype(
-      gz_std_msgs::ConnectRosToGazeboTopic::COMMAND_MOTOR_SPEED);
-  gz_connect_ros_to_gazebo_topic_pub->Publish(
-      connect_ros_to_gazebo_topic_msg, true);
+  connect_ros_to_gazebo_topic_msg.set_ros_topic(namespace_ + "/" + command_sub_topic_);
+  connect_ros_to_gazebo_topic_msg.set_gazebo_topic("~/" + namespace_ + "/" + command_sub_topic_);
+  connect_ros_to_gazebo_topic_msg.set_msgtype(gz_std_msgs::ConnectRosToGazeboTopic::COMMAND_MOTOR_SPEED);
+  gz_connect_ros_to_gazebo_topic_pub->Publish(connect_ros_to_gazebo_topic_msg, true);
 
   // ============================================ //
   // ==== WIND SPEED MSG SETUP (ROS->GAZEBO) ==== //
   // ============================================ //
 
   /// TODO(gbmhunter): Do we need this? There is a separate Gazebo wind plugin.
-  wind_speed_sub_ = node_handle_->Subscribe(
-      "~/" + namespace_ + "/" + wind_speed_sub_topic_,
-      &GazeboMotorModel::WindSpeedCallback, this);
+  wind_speed_sub_ = node_handle_->Subscribe("~/" + namespace_ + "/" + wind_speed_sub_topic_,
+                                            &GazeboMotorModel::WindSpeedCallback, this);
 
-  connect_ros_to_gazebo_topic_msg.set_ros_topic(
-      namespace_ + "/" + wind_speed_sub_topic_);
-  connect_ros_to_gazebo_topic_msg.set_gazebo_topic(
-      "~/" + namespace_ + "/" + wind_speed_sub_topic_);
-  connect_ros_to_gazebo_topic_msg.set_msgtype(
-      gz_std_msgs::ConnectRosToGazeboTopic::WIND_SPEED);
-  gz_connect_ros_to_gazebo_topic_pub->Publish(
-      connect_ros_to_gazebo_topic_msg, true);
+  connect_ros_to_gazebo_topic_msg.set_ros_topic(namespace_ + "/" + wind_speed_sub_topic_);
+  connect_ros_to_gazebo_topic_msg.set_gazebo_topic("~/" + namespace_ + "/" + wind_speed_sub_topic_);
+  connect_ros_to_gazebo_topic_msg.set_msgtype(gz_std_msgs::ConnectRosToGazeboTopic::WIND_SPEED);
+  gz_connect_ros_to_gazebo_topic_pub->Publish(connect_ros_to_gazebo_topic_msg, true);
 }
 
-void GazeboMotorModel::ControlCommandCallback(
-    GzCommandMotorInputMsgPtr& command_motor_input_msg) {
+void GazeboMotorModel::ControlCommandCallback(GzCommandMotorInputMsgPtr& command_motor_input_msg) {
   if (kPrintOnMsgCallback) {
     gzdbg << __FUNCTION__ << "() called." << std::endl;
   }
 
   if (motor_number_ > command_motor_input_msg->motor_speed_size() - 1) {
-    gzerr << "You tried to access index " << motor_number_
-          << " of the MotorSpeed message array which is of size "
+    gzerr << "You tried to access index " << motor_number_ << " of the MotorSpeed message array which is of size "
           << command_motor_input_msg->motor_speed_size();
   }
 
   if (motor_type_ == MotorType::kVelocity) {
-    ref_motor_input_ = std::min(
-        static_cast<double>(
-            command_motor_input_msg->motor_speed(motor_number_)),
-        static_cast<double>(max_rot_velocity_));
+    ref_motor_input_ = std::min(static_cast<double>(command_motor_input_msg->motor_speed(motor_number_)),
+                                static_cast<double>(max_rot_velocity_));
   } else if (motor_type_ == MotorType::kPosition) {
     ref_motor_input_ = command_motor_input_msg->motor_speed(motor_number_);
   } else {  // if (motor_type_ == MotorType::kForce) {
-    ref_motor_input_ = std::min(
-        static_cast<double>(
-            command_motor_input_msg->motor_speed(motor_number_)),
-        static_cast<double>(max_force_));
+    ref_motor_input_ = std::min(static_cast<double>(command_motor_input_msg->motor_speed(motor_number_)),
+                                static_cast<double>(max_force_));
   }
 }
 
@@ -388,18 +325,15 @@ void GazeboMotorModel::UpdateForcesAndMoments() {
               << "] might occur. Consider making smaller simulation time "
                  "steps or raising the rotor_velocity_slowdown_sim_ param.\n";
       }
-      double real_motor_velocity =
-          motor_rot_vel_ * rotor_velocity_slowdown_sim_;
+      double real_motor_velocity = motor_rot_vel_ * rotor_velocity_slowdown_sim_;
       // Get the direction of the rotor rotation.
-      int real_motor_velocity_sign =
-          (real_motor_velocity > 0) - (real_motor_velocity < 0);
+      int real_motor_velocity_sign = (real_motor_velocity > 0) - (real_motor_velocity < 0);
       // Assuming symmetric propellers (or rotors) for the thrust calculation.
-      double thrust = turning_direction_ * real_motor_velocity_sign *
-                      real_motor_velocity * real_motor_velocity *
-                      motor_constant_;
+      double thrust =
+          turning_direction_ * real_motor_velocity_sign * real_motor_velocity * real_motor_velocity * motor_constant_;
 
       // Apply a force to the link.
-      link_->AddRelativeForce(ignition::math::Vector3d (0, 0, thrust));
+      link_->AddRelativeForce(ignition::math::Vector3d(0, 0, thrust));
 
       // Forces from Philppe Martin's and Erwan Salaün's
       // 2010 IEEE Conference on Robotics and Automation paper
@@ -409,11 +343,9 @@ void GazeboMotorModel::UpdateForcesAndMoments() {
       ignition::math::Vector3d body_velocity_W = link_->WorldLinearVel();
       ignition::math::Vector3d relative_wind_velocity_W = body_velocity_W - wind_speed_W_;
       ignition::math::Vector3d body_velocity_perpendicular =
-          relative_wind_velocity_W -
-          (relative_wind_velocity_W.Dot(joint_axis) * joint_axis);
-      ignition::math::Vector3d air_drag = -std::abs(real_motor_velocity) *
-                               rotor_drag_coefficient_ *
-                               body_velocity_perpendicular;
+          relative_wind_velocity_W - (relative_wind_velocity_W.Dot(joint_axis) * joint_axis);
+      ignition::math::Vector3d air_drag =
+          -std::abs(real_motor_velocity) * rotor_drag_coefficient_ * body_velocity_perpendicular;
 
       // Apply air_drag to link.
       link_->AddForce(air_drag);
@@ -421,36 +353,28 @@ void GazeboMotorModel::UpdateForcesAndMoments() {
       // applied.
       physics::Link_V parent_links = link_->GetParentJointsLinks();
       // The tansformation from the parent_link to the link_.
-      ignition::math::Pose3d pose_difference =
-          link_->WorldCoGPose() - parent_links.at(0)->WorldCoGPose();
-      ignition::math::Vector3d drag_torque(
-          0, 0, -turning_direction_ * thrust * moment_constant_);
+      ignition::math::Pose3d pose_difference = link_->WorldCoGPose() - parent_links.at(0)->WorldCoGPose();
+      ignition::math::Vector3d drag_torque(0, 0, -turning_direction_ * thrust * moment_constant_);
       // Transforming the drag torque into the parent frame to handle
       // arbitrary rotor orientations.
-      ignition::math::Vector3d drag_torque_parent_frame =
-          pose_difference.Rot().RotateVector(drag_torque);
+      ignition::math::Vector3d drag_torque_parent_frame = pose_difference.Rot().RotateVector(drag_torque);
       parent_links.at(0)->AddRelativeTorque(drag_torque_parent_frame);
 
       ignition::math::Vector3d rolling_moment;
       // - \omega * \mu_1 * V_A^{\perp}
-      rolling_moment = -std::abs(real_motor_velocity) *
-                       rolling_moment_coefficient_ *
-                       body_velocity_perpendicular;
+      rolling_moment = -std::abs(real_motor_velocity) * rolling_moment_coefficient_ * body_velocity_perpendicular;
       parent_links.at(0)->AddTorque(rolling_moment);
       // Apply the filter on the motor's velocity.
       double ref_motor_rot_vel;
-      ref_motor_rot_vel = rotor_velocity_filter_->updateFilter(
-          ref_motor_input_, sampling_time_);
+      ref_motor_rot_vel = rotor_velocity_filter_->updateFilter(ref_motor_input_, sampling_time_);
 
       // Make sure max force is set, as it may be reset to 0 by a world reset any
       // time. (This cannot be done during Reset() because the change will be undone
       // by the Joint's reset function afterwards.)
-      joint_->SetVelocity(
-          0, turning_direction_ * ref_motor_rot_vel /
-                 rotor_velocity_slowdown_sim_);
+      joint_->SetVelocity(0, turning_direction_ * ref_motor_rot_vel / rotor_velocity_slowdown_sim_);
     }
   }
 }
 
 GZ_REGISTER_MODEL_PLUGIN(GazeboMotorModel);
-}
+}  // namespace gazebo
