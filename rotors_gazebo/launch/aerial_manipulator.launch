@@ -17,6 +17,7 @@
   <arg name="arm_name" default="flying_arm_5"/>
 
   <arg name="arm_controllers" value="joint_state_controller joint1_effort_controller joint2_effort_controller joint3_effort_controller joint4_effort_controller joint5_effort_controller" if="$(eval arg('arm_name')=='flying_arm_5')" />
+  <arg name="arm_controllers" value="joint_state_controller joint1_effort_controller joint2_effort_controller joint3_effort_controller" if="$(eval arg('arm_name')=='flying_arm_3')" />
   
   <group ns="$(arg mav_name)">
     <include file="$(find rotors_gazebo)/launch/spawn_mav.launch">

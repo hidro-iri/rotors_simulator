@@ -1,0 +1,15 @@
+joint_state_controller:
+  type: joint_state_controller/JointStateController
+  publish_rate: 100
+
+joint1_effort_controller:
+  type: effort_controllers/JointEffortController
+  joint: flying_arm_3/j_base_link_link_1
+
+joint2_effort_controller:
+  type: effort_controllers/JointEffortController
+  joint: flying_arm_3/j_link_1_link_2
+
+joint3_effort_controller:
+  type: effort_controllers/JointEffortController
+  joint: flying_arm_3/j_link_2_link_3
