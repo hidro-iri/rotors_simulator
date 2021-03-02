@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+
+<launch>
+  <arg name="mav_name" default="firefly"/>
+  <arg name="namespace" default="$(arg mav_name)"/>
+  <arg name="model" default="$(find rotors_description)/urdf/$(arg mav_name)_base.xacro"/>
+  <arg name="tf_prefix" default="$(optenv ROS_NAMESPACE)"/>
+  <arg name="x" default="0.0"/>
+  <arg name="y" default="0.0"/>
+  <arg name="z" default="0.3"/>
+  <arg name="enable_logging" default="false"/>
+  <arg name="enable_ground_truth" default="true"/>
+  <arg name="log_file" default="$(arg mav_name)"/>
+  <arg name="wait_to_record_bag" default="false"/>
+  <arg name="enable_mavlink_interface" default="false"/>
+  <arg name="arm_enable" default="false"/>
+  <arg name="arm_name" default="flying_arm_5"/>
+
+  <arg name="arm_controllers" value="joint_state_controller joint1_effort_controller joint2_effort_controller joint3_effort_controller joint4_effort_controller joint5_effort_controller" if="$(eval arg('arm_name')=='flying_arm_5')" />
+  
+  <group ns="$(arg mav_name)">
+    <include file="$(find rotors_gazebo)/launch/spawn_mav.launch">
+      <arg name="mav_name" value="$(arg mav_name)" />
+      <arg name="model" value="$(find rotors_description)/urdf/mav_generic_odometry_sensor.gazebo" />
+      <arg name="enable_logging" value="$(arg enable_logging)" />
+      <arg name="enable_ground_truth" value="$(arg enable_ground_truth)" />
+      <arg name="log_file" value="$(arg log_file)" />
+      <arg name="arm_enable" value="$(arg arm_enable)" />
+      <arg name="arm_name" value="$(arg arm_name)" />
+    </include>
+
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="rob_st_pub" />
+    <rosparam file="$(find rotors_gazebo)/resource/arms/$(arg arm_name).yaml" command="load" if="$(eval arg('arm_enable')==1)" />
+    <node
+      name="controller_spawner"
+      pkg="controller_manager"
+      type="spawner"
+      respawn="false"
+      output="screen"
+      args="$(arg arm_controllers)"
+    />
+  </group>
+
+</launch>

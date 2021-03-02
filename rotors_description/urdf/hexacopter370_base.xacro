@@ -21,14 +21,23 @@
   limitations under the License.
 -->
 
-<robot name="hexarotor370" xmlns:xacro="http://ros.org/wiki/xacro">
+<robot name="hexacopter370" xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:include filename="$(find rotors_description)/urdf/component_snippets.xacro" />
-  <!-- Instantiate hexarotor370 "mechanics" -->
-  <xacro:include filename="$(find rotors_description)/urdf/hexarotor370.xacro" />
+  <!-- Instantiate hexacopter370 "mechanics" -->
+  <xacro:include filename="$(find rotors_description)/urdf/hexacopter370.xacro" />
 
   <!-- Instantiate a controller. -->
   <xacro:controller_plugin_macro namespace="${namespace}" imu_sub_topic="imu" />
-  
+
+  <xacro:if value="$(arg arm_enable)">
+    <xacro:include filename="$(find rotors_description)/urdf/arms/$(arg arm_name).xacro" />
+    <xacro:flying_arm_base_macro
+      namespace="${namespace}"
+      base_link="base_link"
+      origin_xyz="0.0 0.0 -0.10"
+      origin_rpy="0 0 0" />
+  </xacro:if>
+
   <!-- Instantiate a ROS message interface -->
   <!-- <xacro:ros_interface_plugin_macro namespace="${namespace}" />-->
 
@@ -48,7 +57,7 @@
     <xacro:bag_plugin_macro
       namespace="${namespace}"
       bag_file="$(arg log_file)"
-      rotor_velocity_slowdown_sim="${rotor_velocity_slowdown_sim}" 
+      rotor_velocity_slowdown_sim="${rotor_velocity_slowdown_sim}"
       wait_to_record_bag="$(arg wait_to_record_bag)" />
   </xacro:if>
 

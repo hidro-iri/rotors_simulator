@@ -13,6 +13,8 @@
   <arg name="log_file" default="$(arg mav_name)"/>
   <arg name="wait_to_record_bag" default="false"/>
   <arg name="enable_mavlink_interface" default="false"/>
+  <arg name="arm_enable" default="false"/>
+  <arg name="arm_name" default="flying_arm_5"/>
 
   <!-- send the robot XML to param server -->
   <param name="robot_description" command="
@@ -23,10 +25,13 @@
     log_file:=$(arg log_file)
     wait_to_record_bag:=$(arg wait_to_record_bag)
     mav_name:=$(arg mav_name)
-    namespace:=$(arg namespace)"
+    namespace:=$(arg namespace)
+    arm_enable:=$(arg arm_enable)
+    arm_name:=$(arg arm_name)"
   />
   <param name="tf_prefix" type="string" value="$(arg tf_prefix)" />
 
+  
   <!-- push robot_description to factory and spawn robot in gazebo -->
   <node name="spawn_$(arg namespace)" pkg="gazebo_ros" type="spawn_model"
    args="-param robot_description
