@@ -84,7 +84,7 @@
     </link>
 
 
-    <gazebo reference="${namespace}/link_1">
+    <gazebo reference="${arm_namespace}/link_1">
       <mu1>0.9</mu1>
       <mu2>0.9</mu2>
     </gazebo>
