@@ -1,6 +1,6 @@
 # Hexacopter vehicle parameters
 mass: 1.9828
-inertia: {xx: 0.0013076, xy: 6.3281E-06, xz: -8.4594E-06, yy: 0.0022761, yz: 1.9836E-06, zz: 0.0031313}
+inertia: {xx: 0.0134943, xy: -9.6E-06, xz: 2.82E-05, yy: 0.0141622, yz: -7.9E-06, zz: 0.0237319}
 
 # angle should be expressed in rad
 # direction 1 means counter clockwise, -1 clockwise
