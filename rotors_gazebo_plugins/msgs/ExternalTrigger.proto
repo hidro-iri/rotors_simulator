@@ -1,0 +1,9 @@
+syntax = "proto2";
+package gz_mav_msgs;
+
+import "Header.proto";
+import "vector3d.proto";
+
+message ExternalTrigger {
+  required bool data = 1;
+}
