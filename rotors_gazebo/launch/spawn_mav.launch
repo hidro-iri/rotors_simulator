@@ -14,8 +14,10 @@
   <arg name="wait_to_record_bag" default="false"/>
   <arg name="enable_mavlink_interface" default="false"/>
   <arg name="arm_enable" default="false"/>
-  <arg name="arm_name" default="flying_arm_5"/>
+  <arg name="arm_name" default="flying_arm_3"/>
 
+  <arg name="disturbance_start" default="25" />
+  
   <!-- send the robot XML to param server -->
   <param name="robot_description" command="
     $(find xacro)/xacro '$(arg model)'
@@ -27,7 +29,8 @@
     mav_name:=$(arg mav_name)
     namespace:=$(arg namespace)
     arm_enable:=$(arg arm_enable)
-    arm_name:=$(arg arm_name)"
+    arm_name:=$(arg arm_name)
+    disturbance_start:=$(arg disturbance_start)"
   />
   <param name="tf_prefix" type="string" value="$(arg tf_prefix)" />
 

@@ -568,7 +568,7 @@
         <windGustForceMean>${wind_gust_force_mean}</windGustForceMean> <!-- [N] -->
         <windSpeedMean>${wind_speed_mean}</windSpeedMean> <!-- [m/s] -->
         <useCustomStaticWindField>${use_custom_static_wind_field}</useCustomStaticWindField>
-        <customWindFieldPath>${custom_wind_field_path}</customWindFieldPath> <!-- from ~/.ros -->
+        <customWindFieldPath>${custom_wind_field_path}</customWindFieldPath> <!--from ~/.ros -->
       </plugin>
     </gazebo>
   </xacro:macro>
