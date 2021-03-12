@@ -39,6 +39,7 @@
 
 #include "Actuators.pb.h"
 #include "CommandMotorSpeed.pb.h"
+#include "ExternalTrigger.pb.h"
 #include "Float32.pb.h"
 #include "FluidPressure.pb.h"
 #include "Imu.pb.h"
@@ -73,6 +74,7 @@
 #include <sensor_msgs/MagneticField.h>
 #include <sensor_msgs/NavSatFix.h>
 #include <std_msgs/Float32.h>
+#include <std_msgs/Bool.h>
 
 #include "rotors_gazebo_plugins/common.h"
 
@@ -114,6 +116,8 @@ typedef const boost::shared_ptr<const gz_sensor_msgs::JointState>
 typedef const boost::shared_ptr<const gz_sensor_msgs::MagneticField>
     GzMagneticFieldMsgPtr;
 typedef const boost::shared_ptr<const gz_sensor_msgs::NavSatFix> GzNavSatFixPtr;
+typedef const boost::shared_ptr<const gz_mav_msgs::ExternalTrigger> GzExternalTriggerMsgPtr;
+
 
 /// \brief    ROS interface plugin for Gazebo.
 /// \details  This routes messages to/from Gazebo and ROS. This is used
@@ -312,6 +316,11 @@ class GazeboRosInterfacePlugin : public WorldPlugin {
   // WIND SPEED
   void RosWindSpeedMsgCallback(
       const rotors_comm::WindSpeedConstPtr& ros_wind_speed_msg_ptr,
+      gazebo::transport::PublisherPtr gz_publisher_ptr);
+
+  // EXTERNAL TRIGGER
+  void RosExternalTriggerMsgCallback(
+      const std_msgs::BoolConstPtr& ros_external_trigger_msg_ptr,
       gazebo::transport::PublisherPtr gz_publisher_ptr);
 
   // ============================================ //

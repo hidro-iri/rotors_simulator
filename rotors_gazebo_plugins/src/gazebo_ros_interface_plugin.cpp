@@ -360,6 +360,24 @@ void GazeboRosInterfacePlugin::GzConnectRosToGazeboTopicMsgCallback(
 
       break;
     }
+    case gz_std_msgs::ConnectRosToGazeboTopic::EXTERNAL_TRIGGER: {
+      gazebo::transport::PublisherPtr gz_publisher_ptr =
+          gz_node_handle_->Advertise<gz_mav_msgs::ExternalTrigger>(
+              gz_connect_ros_to_gazebo_topic_msg->gazebo_topic(), 1);
+
+      // Create ROS subscriber.
+      ros::Subscriber ros_subscriber =
+          ros_node_handle_->subscribe<std_msgs::Bool>(
+              gz_connect_ros_to_gazebo_topic_msg->ros_topic(), 1,
+              boost::bind(&GazeboRosInterfacePlugin::RosExternalTriggerMsgCallback,
+                          this, _1, gz_publisher_ptr));
+
+      // Save reference to the ROS subscriber so callback will continue to be
+      // called.
+      ros_subscribers.push_back(ros_subscriber);
+
+      break;
+    }
     default: {
       gzthrow("ConnectRosToGazeboTopic message type with enum val = "
               << gz_connect_ros_to_gazebo_topic_msg->msgtype()
@@ -1027,6 +1045,16 @@ void GazeboRosInterfacePlugin::RosWindSpeedMsgCallback(
 
   // Publish to Gazebo
   gz_publisher_ptr->Publish(gz_wind_speed_msg);
+}
+
+void GazeboRosInterfacePlugin::RosExternalTriggerMsgCallback(
+    const std_msgs::BoolConstPtr& ros_external_trigger_msg_ptr,
+    gazebo::transport::PublisherPtr gz_publisher_ptr) {
+        
+  gz_mav_msgs::ExternalTrigger gz_external_trigger_msg;
+
+  gz_external_trigger_msg.set_data(ros_external_trigger_msg_ptr->data);
+  gz_publisher_ptr->Publish(gz_external_trigger_msg);
 }
 
 void GazeboRosInterfacePlugin::GzBroadcastTransformMsgCallback(
