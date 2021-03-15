@@ -85,6 +85,8 @@ void GazeboWindPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf) {
     getSdfParam<double>(_sdf, "windGustForceVariance", wind_gust_force_variance_, wind_gust_force_variance_);
     getSdfParam<ignition::math::Vector3d>(_sdf, "windGustDirection", wind_gust_direction_, wind_gust_direction_);
 
+    getSdfParam<bool>(_sdf, "externalTriggered", external_triggered_, external_triggered_);
+
     wind_direction_.Normalize();
     wind_gust_direction_.Normalize();
     wind_gust_start_ = common::Time(wind_gust_start);
@@ -133,11 +135,20 @@ void GazeboWindPlugin::OnUpdate(const common::UpdateInfo& _info) {
 
     ignition::math::Vector3d wind_gust(0.0, 0.0, 0.0);
     // Calculate the wind gust force.
-    if (now >= wind_gust_start_ && now < wind_gust_end_) {
-      double wind_gust_strength = wind_gust_force_mean_;
-      wind_gust = wind_gust_strength * wind_gust_direction_;
-      // Apply a force from the wind gust to the link.
-      link_->AddForceAtRelativePosition(wind_gust, xyz_offset_);
+    if (!external_triggered_) {
+      if (now >= wind_gust_start_ && now < wind_gust_end_) {
+        double wind_gust_strength = wind_gust_force_mean_;
+        wind_gust = wind_gust_strength * wind_gust_direction_;
+        // Apply a force from the wind gust to the link.
+        link_->AddForceAtRelativePosition(wind_gust, xyz_offset_);
+      }
+    } else {
+      if (external_trigger_) {
+        double wind_gust_strength = wind_gust_force_mean_;
+        wind_gust = wind_gust_strength * wind_gust_direction_;
+        // Apply a force from the wind gust to the link.
+        link_->AddForceAtRelativePosition(wind_gust, xyz_offset_);
+      }
     }
 
     wrench_stamped_msg_.mutable_header()->set_frame_id(frame_id_);
@@ -417,7 +428,10 @@ ignition::math::Vector3d GazeboWindPlugin::TrilinearInterpolation(ignition::math
 }
 
 void GazeboWindPlugin::ExternalTriggerCallback(GzExternalTriggerMsgPtr& external_trigger_input_msg) {
-  std::cout << "Inside external trigger!\n";
+  external_trigger_ = external_trigger_input_msg->data();
+  // if (external_triggered_ && external_trigger_) {
+  //   wind_gust_start_ = world_->SimTime();
+  // }
 }
 
 GZ_REGISTER_MODEL_PLUGIN(GazeboWindPlugin);

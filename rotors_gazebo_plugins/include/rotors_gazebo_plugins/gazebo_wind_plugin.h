@@ -85,7 +85,8 @@ class GazeboWindPlugin : public ModelPlugin {
         frame_id_(kDefaultFrameId),
         link_name_(kDefaultLinkName),
         node_handle_(nullptr),
-        pubs_and_subs_created_(false) {}
+        pubs_and_subs_created_(false),
+        external_triggered_(false) {}
 
   virtual ~GazeboWindPlugin();
 
@@ -141,6 +142,7 @@ class GazeboWindPlugin : public ModelPlugin {
   common::Time wind_gust_end_;
   common::Time wind_gust_start_;
   bool external_trigger_;
+  bool external_triggered_;
 
   /// \brief    Variables for custom wind field generation.
   bool use_custom_static_wind_field_;
