@@ -14,7 +14,7 @@
 
     <model name="ball">
       <link name="ball">
-        <pose>0 0 5 0 0 0</pose>
+        <pose>1 0 0 0 0 0</pose>
         <inertial>
           <pose>0 0 0 0 0 0</pose>
           <inertia>
@@ -47,7 +47,11 @@
       </link>
       <plugin name="ball_plugin" filename="librotors_gazebo_ball_plugin.so">
         <ballNamespace>ball</ballNamespace>
-        <positionPubTopic>position</positionPubTopic>
+        <positionPubTopic>pos</positionPubTopic>
+        <velocityPubTopic>vel</velocityPubTopic>
+        <throwBallSubTopic>throw</throwBallSubTopic>
+        <initialPosition>0 10 0</initialPosition>
+        <initialVelocity>0 0 10</initialVelocity>
       </plugin>
     </model>
 
