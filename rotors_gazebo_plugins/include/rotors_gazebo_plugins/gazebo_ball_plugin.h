@@ -1,5 +1,5 @@
-#ifndef ROTORS_GAZEBO_PLUGINS_GAZEBO_BAl_PLUGIN_H
-#define ROTORS_GAZEBO_PLUGINS_GAZEBO_BAl_PLUGIN_H
+#ifndef ROTORS_GAZEBO_PLUGINS_GAZEBO_BALL_PLUGIN_H
+#define ROTORS_GAZEBO_PLUGINS_GAZEBO_BALL_PLUGIN_H
 
 #include <functional>
 #include <gazebo/common/common.hh>
@@ -10,11 +10,14 @@
 #include <mav_msgs/default_topics.h>  // This comes from the mav_comm repo
 
 #include "rotors_gazebo_plugins/common.h"
+
+#include "rotors_gazebo_plugins/common.h"
 #include "Vector3dStamped.pb.h"
 #include "Float32.pb.h"
 #include "ConnectGazeboToRosTopic.pb.h"
 #include "ConnectRosToGazeboTopic.pb.h"
 #include "ExternalTrigger.pb.h"
+#include "TransformStampedWithFrameIds.pb.h"
 
 namespace gazebo {
 
@@ -38,9 +41,11 @@ class GazeboBall : public ModelPlugin {
 
   std::string pos_pub_topic_;
   std::string vel_pub_topic_;
-  
+
   std::string throw_sub_topic_;
-  
+
+  std::string parent_frame_id_;
+  std::string child_frame_id_;
 
   physics::ModelPtr model_;
   event::ConnectionPtr update_connection_;
@@ -49,6 +54,7 @@ class GazeboBall : public ModelPlugin {
 
   gazebo::transport::PublisherPtr pos_pub_;
   gazebo::transport::PublisherPtr vel_pub_;
+  gazebo::transport::PublisherPtr broadcast_transform_pub_;
 
   gazebo::transport::SubscriberPtr throw_sub_;
 
